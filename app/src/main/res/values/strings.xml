@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="welcome">K-App</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="name">Имя</string>
+    <string name="email">Email</string>
+
+    <string name="btn_login">Вход</string>
+    <string name="btn_registration">Регистрация</string>
+    <string name="btn_exit">Выход</string>
+    <string name="btn_back">Назад</string>
+
+    <string name="menu">Меню</string>
+    <string name="btn_start">Старт</string>
+    <string name="btn_profile">Профиль</string>
+    <string name="btn_settings">Настройки</string>
+    <string name="btn_report">Сообщить о проблеме</string>
+
+    <string name="settings">Настройки</string>
+    <string name="dark_mode">Ночная тема</string>
+    <string name="profile">Профиль</string>
+    <string name="start_message">Приложение запущено!</string>
+    <string name="registration_success">Регистрация выполнена</string>
+    <string name="empty_fields">Заполните все поля</string>
+
+    <string name="profile_name">Имя: %1$s</string>
+    <string name="profile_login">Логин: %1$s</string>
+    <string name="profile_email">Email: %1$s</string>
+
+    <string name="choose_contact">Выберите способ связи</string>
+    <string name="contact_email">Почта</string>
+    <string name="contact_phone">Телефон</string>
+    <string name="cancel">Отмена</string>
+    <string name="no_phone_app">Приложение для звонков не найдено</string>
+    <string name="no_mail_app">Почтовое приложение не найдено</string>
+</resources>
