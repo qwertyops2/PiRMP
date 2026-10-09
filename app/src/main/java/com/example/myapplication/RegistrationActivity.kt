@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +13,7 @@ class RegistrationActivity : BaseActivity() {
     private lateinit var editLogin: EditText
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
+    private lateinit var editRepeatPassword: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +25,16 @@ class RegistrationActivity : BaseActivity() {
         editLogin = findViewById(R.id.editLogin)
         editEmail = findViewById(R.id.editEmail)
         editPassword = findViewById(R.id.editPassword)
+        editRepeatPassword = findViewById(R.id.editRepeatPassword)
 
         if (savedInstanceState != null) {
             editName.setText(savedInstanceState.getString("name"))
             editLogin.setText(savedInstanceState.getString("login"))
             editEmail.setText(savedInstanceState.getString("email"))
             editPassword.setText(savedInstanceState.getString("password"))
+            editRepeatPassword.setText(
+                savedInstanceState.getString("repeatPassword")
+            )
         }
 
         findViewById<Button>(R.id.buttonRegister).setOnClickListener {
@@ -39,13 +43,26 @@ class RegistrationActivity : BaseActivity() {
             val login = editLogin.text.toString()
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
+            val repeatPassword = editRepeatPassword.text.toString()
 
             if (name.isBlank() || login.isBlank() ||
-                email.isBlank() || password.isBlank()) {
+                email.isBlank() || password.isBlank() ||
+                repeatPassword.isBlank()) {
 
                 Toast.makeText(
                     this,
                     R.string.empty_fields,
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else if (password != repeatPassword) {
+
+                editRepeatPassword.error =
+                    getString(R.string.passwords_do_not_match)
+
+                Toast.makeText(
+                    this,
+                    R.string.passwords_do_not_match,
                     Toast.LENGTH_SHORT
                 ).show()
 
@@ -82,6 +99,10 @@ class RegistrationActivity : BaseActivity() {
         outState.putString("login", editLogin.text.toString())
         outState.putString("email", editEmail.text.toString())
         outState.putString("password", editPassword.text.toString())
+        outState.putString(
+            "repeatPassword",
+            editRepeatPassword.text.toString()
+        )
     }
 
     override fun onStart() {

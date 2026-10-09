@@ -23,6 +23,8 @@
     <string name="start_message">Приложение запущено!</string>
     <string name="registration_success">Регистрация выполнена</string>
     <string name="empty_fields">Заполните все поля</string>
+    <string name="confirm_password">Повтор пароля</string>
+    <string name="passwords_do_not_match">Пароли не совпадают</string>
 
     <string name="profile_name">Имя: %1$s</string>
     <string name="profile_login">Логин: %1$s</string>
