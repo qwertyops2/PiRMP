@@ -73,6 +73,7 @@ class RegistrationActivity : BaseActivity() {
                     .putString("name", name)
                     .putString("login", login)
                     .putString("email", email)
+                    .putString("password", password)
                     .apply()
 
                 Toast.makeText(

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 
 class HelloActivity : BaseActivity() {
 
@@ -22,8 +23,28 @@ class HelloActivity : BaseActivity() {
         editPassword = findViewById(R.id.editPassword)
 
         findViewById<Button>(R.id.buttonLogin).setOnClickListener {
-            val intent = Intent(this, MenuActivity::class.java)
-            startActivity(intent)
+
+            val login = editLogin.text.toString()
+            val password = editPassword.text.toString()
+
+            val prefs = getSharedPreferences("user", MODE_PRIVATE)
+
+            val savedLogin = prefs.getString("login", null)
+            val savedPassword = prefs.getString("password", null)
+
+            if (login.isNotEmpty() && password.isNotEmpty() &&
+                login == savedLogin && password == savedPassword) {
+
+                val intent = Intent(this, MenuActivity::class.java)
+                startActivity(intent)
+
+            } else {
+                Toast.makeText(
+                    this,
+                    R.string.invalid_credentials,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         findViewById<Button>(R.id.buttonRegistration).setOnClickListener {
