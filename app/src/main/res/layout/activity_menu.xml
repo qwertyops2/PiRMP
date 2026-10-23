@@ -26,6 +26,12 @@
         android:text="@string/btn_profile" />
 
     <Button
+        android:id="@+id/buttonUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/menu_users" />
+
+    <Button
         android:id="@+id/buttonSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

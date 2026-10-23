@@ -26,9 +26,11 @@
     <string name="confirm_password">Повтор пароля</string>
     <string name="passwords_do_not_match">Пароли не совпадают</string>
 
-    <string name="profile_name">Имя: %1$s</string>
+    <string name="profile_name">ФИО: %1$s</string>
     <string name="profile_login">Логин: %1$s</string>
     <string name="profile_email">Email: %1$s</string>
+    <string name="profile_birth_date">Дата рождения: %1$s</string>
+    <string name="profile_gender">Пол: %1$s</string>
 
     <string name="choose_contact">Выберите способ связи</string>
     <string name="contact_email">Почта</string>
@@ -38,4 +40,15 @@
     <string name="no_mail_app">Почтовое приложение не найдено</string>
 
     <string name="invalid_credentials">Неверный логин или пароль</string>
+    <string name="full_name">ФИО</string>
+    <string name="birth_date">Дата рождения (ДД.ММ.ГГГГ)</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="avatar">Аватар пользователя</string>
+
+    <string name="users_title">Список пользователей</string>
+    <string name="add_user">Добавить</string>
+    <string name="demo_user">Пользователь %1$d</string>
+    <string name="menu_users">Пользователи</string>
+
 </resources>

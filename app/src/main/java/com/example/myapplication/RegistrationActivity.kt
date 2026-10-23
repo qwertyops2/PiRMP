@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RadioGroup
 import android.widget.Toast
 
 class RegistrationActivity : BaseActivity() {
@@ -14,6 +16,17 @@ class RegistrationActivity : BaseActivity() {
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
     private lateinit var editRepeatPassword: EditText
+    private lateinit var editBirthDate: EditText
+    private lateinit var radioGender: RadioGroup
+    private lateinit var imageAvatar: ImageView
+
+    private val avatars = intArrayOf(
+        R.drawable.avatar1,
+        R.drawable.avatar2,
+        R.drawable.avatar3
+    )
+
+    private var avatarIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +39,8 @@ class RegistrationActivity : BaseActivity() {
         editEmail = findViewById(R.id.editEmail)
         editPassword = findViewById(R.id.editPassword)
         editRepeatPassword = findViewById(R.id.editRepeatPassword)
+        editBirthDate = findViewById(R.id.editBirthDate)
+        radioGender = findViewById(R.id.radioGender)
 
         if (savedInstanceState != null) {
             editName.setText(savedInstanceState.getString("name"))
@@ -35,19 +50,41 @@ class RegistrationActivity : BaseActivity() {
             editRepeatPassword.setText(
                 savedInstanceState.getString("repeatPassword")
             )
+
+            editBirthDate.setText(
+                savedInstanceState.getString("birthDate")
+            )
+
+            val genderId = savedInstanceState.getInt("genderId", -1)
+
+            if (genderId != -1) {
+                radioGender.check(genderId)
+            }
         }
 
         findViewById<Button>(R.id.buttonRegister).setOnClickListener {
+
+            Log.i("RegistrationActivity", "Нажата кнопка Регистрация")
 
             val name = editName.text.toString()
             val login = editLogin.text.toString()
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
             val repeatPassword = editRepeatPassword.text.toString()
+            val birthDate = editBirthDate.text.toString().trim()
+
+            val gender = when (radioGender.checkedRadioButtonId) {
+                R.id.radioMale -> getString(R.string.male)
+                R.id.radioFemale -> getString(R.string.female)
+                else -> ""
+            }
 
             if (name.isBlank() || login.isBlank() ||
                 email.isBlank() || password.isBlank() ||
-                repeatPassword.isBlank()) {
+                repeatPassword.isBlank() || birthDate.isBlank() ||
+                gender.isBlank()) {
+
+                Log.i("RegistrationActivity", "Не все поля заполнены")
 
                 Toast.makeText(
                     this,
@@ -60,6 +97,8 @@ class RegistrationActivity : BaseActivity() {
                 editRepeatPassword.error =
                     getString(R.string.passwords_do_not_match)
 
+                Log.i("RegistrationActivity", "Пароли не совпадают")
+
                 Toast.makeText(
                     this,
                     R.string.passwords_do_not_match,
@@ -70,11 +109,16 @@ class RegistrationActivity : BaseActivity() {
 
                 getSharedPreferences("user", MODE_PRIVATE)
                     .edit()
+                    .putInt("avatarIndex", avatarIndex)
                     .putString("name", name)
                     .putString("login", login)
                     .putString("email", email)
                     .putString("password", password)
+                    .putString("birthDate", birthDate)
+                    .putString("gender", gender)
                     .apply()
+
+                Log.i("RegistrationActivity", "Регистрация выполнена")
 
                 Toast.makeText(
                     this,
@@ -89,7 +133,21 @@ class RegistrationActivity : BaseActivity() {
         }
 
         findViewById<Button>(R.id.buttonBack).setOnClickListener {
+
+            Log.i("RegistrationActivity", "Нажата кнопка Назад")
             finish()
+        }
+
+        imageAvatar = findViewById(R.id.imageAvatar)
+
+        avatarIndex = savedInstanceState?.getInt("avatarIndex") ?: 0
+        imageAvatar.setImageResource(avatars[avatarIndex])
+
+        imageAvatar.setOnClickListener {
+            avatarIndex = (avatarIndex + 1) % avatars.size
+            imageAvatar.setImageResource(avatars[avatarIndex])
+
+            Log.i("RegistrationActivity", "Выбран аватар: $avatarIndex")
         }
     }
 
@@ -100,10 +158,10 @@ class RegistrationActivity : BaseActivity() {
         outState.putString("login", editLogin.text.toString())
         outState.putString("email", editEmail.text.toString())
         outState.putString("password", editPassword.text.toString())
-        outState.putString(
-            "repeatPassword",
-            editRepeatPassword.text.toString()
-        )
+        outState.putString("repeatPassword", editRepeatPassword.text.toString())
+        outState.putString("birthDate", editBirthDate.text.toString())
+        outState.putInt("genderId", radioGender.checkedRadioButtonId)
+        outState.putInt("avatarIndex", avatarIndex)
     }
 
     override fun onStart() {

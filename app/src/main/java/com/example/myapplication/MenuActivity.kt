@@ -75,5 +75,10 @@ class MenuActivity : BaseActivity() {
         findViewById<Button>(R.id.buttonExit).setOnClickListener {
             finishAffinity()
         }
+
+        findViewById<Button>(R.id.buttonUsers).setOnClickListener {
+            startActivity(Intent(this, UsersActivity::class.java))
+        }
+
     }
 }
