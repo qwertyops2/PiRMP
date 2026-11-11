@@ -1,71 +1,127 @@
 package com.example.myapplication
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class HelloActivity : BaseActivity() {
 
-    private lateinit var editLogin: EditText
-    private lateinit var editPassword: EditText
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_helloact)
 
         Log.i("HelloActivity", "onCreate")
 
-        editLogin = findViewById(R.id.editLogin)
-        editPassword = findViewById(R.id.editPassword)
+        setContent {
+            var login by rememberSaveable { mutableStateOf("") }
+            var password by rememberSaveable { mutableStateOf("") }
 
-        findViewById<Button>(R.id.buttonLogin).setOnClickListener {
+            AppTheme(darkTheme = isDarkTheme) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(25.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.avatar1),
+                        contentDescription = stringResource(R.string.app_name),
+                        modifier = Modifier.size(100.dp)
+                    )
 
-            val login = editLogin.text.toString()
-            val password = editPassword.text.toString()
+                    Spacer(
+                        modifier = Modifier.height(15.dp)
+                    )
 
-            val prefs = getSharedPreferences("user", MODE_PRIVATE)
+                    Text(
+                        text = stringResource(R.string.welcome),
+                        fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
-            val savedLogin = prefs.getString("login", null)
-            val savedPassword = prefs.getString("password", null)
+                    Spacer(
+                        modifier = Modifier.height(15.dp)
+                    )
 
-            if (login.isNotEmpty() && password.isNotEmpty() &&
-                login == savedLogin && password == savedPassword) {
+                    OutlinedTextField(
+                        value = login,
+                        onValueChange = { login = it },
+                        label = { Text(stringResource(R.string.login)) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
 
-                val intent = Intent(this, MenuActivity::class.java)
-                startActivity(intent)
+                    OutlinedTextField(
+                        value = password,
+                        onValueChange = { password = it },
+                        label = { Text(stringResource(R.string.password)) },
+                        visualTransformation = PasswordVisualTransformation(),
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
 
-            } else {
-                Toast.makeText(
-                    this,
-                    R.string.invalid_credentials,
-                    Toast.LENGTH_SHORT
-                ).show()
+                    Button(
+                        onClick = {
+                            val prefs = getSharedPreferences("user", MODE_PRIVATE)
+                            val savedLogin = prefs.getString("login", null)
+                            val savedPassword = prefs.getString("password", null)
+
+                            if (login.isNotEmpty() && password.isNotEmpty() &&
+                                login == savedLogin && password == savedPassword) {
+
+                                val intent = Intent(this@HelloActivity, MenuActivity::class.java)
+                                startActivity(intent)
+                            }
+                            else {
+                                Toast.makeText(
+                                    this@HelloActivity,
+                                    R.string.invalid_credentials,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.btn_login))
+                    }
+
+                    Button(
+                        onClick = {
+                            val intent = Intent(this@HelloActivity, RegistrationActivity::class.java)
+                            startActivity(intent)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.btn_registration))
+                    }
+
+                    Button(
+                        onClick = {
+                            finish()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(text = stringResource(R.string.btn_exit))
+                    }
+                }
             }
         }
-
-        findViewById<Button>(R.id.buttonRegistration).setOnClickListener {
-            val intent = Intent(this, RegistrationActivity::class.java)
-            startActivity(intent)
-        }
-
-        findViewById<Button>(R.id.buttonExit).setOnClickListener {
-            finish()
-        }
-
-        if (savedInstanceState != null) {
-            editLogin.setText(savedInstanceState.getString("login"))
-            editPassword.setText(savedInstanceState.getString("password"))
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString("login", editLogin.text.toString())
-        outState.putString("password", editPassword.text.toString())
     }
 
     override fun onStart() {

@@ -1,30 +1,70 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.Switch
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class SettingsActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val switchTheme = findViewById<Switch>(R.id.switchTheme)
+        setContent {
+            AppTheme(darkTheme = isDarkTheme) {
 
-        switchTheme.isChecked = prefs.getBoolean("dark_mode", false)
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(25.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-        switchTheme.setOnCheckedChangeListener { _, checked ->
-            prefs.edit()
-                .putBoolean("dark_mode", checked)
-                .apply()
+                    Text(
+                        text = stringResource(R.string.settings),
+                        fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
-            recreate()
-        }
+                    Spacer(modifier = Modifier.height(20.dp))
 
-        findViewById<Button>(R.id.buttonBack).setOnClickListener {
-            finish()
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = stringResource(R.string.dark_mode),
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+
+                        Switch(
+                            checked = isDarkTheme,
+                            onCheckedChange = { checked ->
+                                setDarkTheme(checked)
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    Button(
+                        onClick = { finish() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_back))
+                    }
+                }
+            }
         }
     }
 }

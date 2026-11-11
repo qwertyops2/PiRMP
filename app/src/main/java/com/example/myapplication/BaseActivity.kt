@@ -2,32 +2,34 @@ package com.example.myapplication
 
 import android.app.Activity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.compose.runtime.mutableStateOf
 
-open class BaseActivity : Activity() {
+open class BaseActivity : ComponentActivity() {
 
-    private var currentDarkMode = false
+    private val darkThemeState = mutableStateOf(false)
 
+    protected val isDarkTheme: Boolean get() = darkThemeState.value
     override fun onCreate(savedInstanceState: Bundle?) {
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        currentDarkMode = prefs.getBoolean("dark_mode", false)
-
-        if (currentDarkMode) {
-            setTheme(R.style.AppThemeNight)
-        } else {
-            setTheme(R.style.AppThemeDay)
-        }
-
         super.onCreate(savedInstanceState)
+        readSavedTheme()
     }
 
     override fun onResume() {
         super.onResume()
+        readSavedTheme()
+    }
 
-        val prefs = getSharedPreferences("settings", MODE_PRIVATE)
-        val darkMode = prefs.getBoolean("dark_mode", false)
+    protected fun setDarkTheme(enabled: Boolean) {
+        getSharedPreferences("settings", MODE_PRIVATE)
+            .edit()
+            .putBoolean("dark_mode", enabled)
+            .apply()
+        darkThemeState.value = enabled
+    }
 
-        if (darkMode != currentDarkMode) {
-            recreate()
-        }
+    private fun readSavedTheme() {
+        darkThemeState.value = getSharedPreferences("settings", MODE_PRIVATE)
+            .getBoolean("dark_mode", false)
     }
 }

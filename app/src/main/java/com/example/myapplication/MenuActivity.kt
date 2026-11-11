@@ -1,84 +1,181 @@
 package com.example.myapplication
 
-import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
 import android.widget.Toast
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MenuActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_menu)
 
-        findViewById<Button>(R.id.buttonStart).setOnClickListener {
-            startActivity(Intent(this, StartActivity::class.java))
-        }
+        setContent {
+            var showContactDialog by remember {
+                mutableStateOf(false)
+            }
 
-        findViewById<Button>(R.id.buttonProfile).setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
+            AppTheme(darkTheme = isDarkTheme) {
 
-        findViewById<Button>(R.id.buttonSettings).setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(25.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-        findViewById<Button>(R.id.buttonReport).setOnClickListener {
+                    Text(
+                        text = stringResource(R.string.menu),
+                        fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
-            val options = arrayOf(
-                getString(R.string.contact_email),
-                getString(R.string.contact_phone)
-            )
+                    Spacer(modifier = Modifier.height(20.dp))
 
-            AlertDialog.Builder(this)
-                .setTitle(R.string.choose_contact)
-                .setItems(options) { _, which ->
+                    Button(
+                        onClick = {
+                            startActivity(
+                                Intent(this@MenuActivity, StartActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_start))
+                    }
 
-                    if (which == 0) {
-                        val intent = Intent(Intent.ACTION_SENDTO).apply {
-                            data = Uri.parse("mailto:tak_nazivaemay_podderjka@gmail.com")
-                        }
+                    Button(
+                        onClick = {
+                            startActivity(
+                                Intent(this@MenuActivity, ProfileActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_profile))
+                    }
 
-                        try {
-                            startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(
-                                this,
-                                R.string.no_mail_app,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    Button(
+                        onClick = {
+                            startActivity(
+                                Intent(this@MenuActivity, UsersActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.menu_users))
+                    }
 
-                    } else {
-                        val intent = Intent(Intent.ACTION_DIAL).apply {
-                            data = Uri.parse("tel:+71234567890")
-                        }
+                    Button(
+                        onClick = {
+                            startActivity(
+                                Intent(this@MenuActivity, SettingsActivity::class.java)
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_settings))
+                    }
 
-                        try {
-                            startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            Toast.makeText(
-                                this,
-                                R.string.no_phone_app,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    Button(
+                        onClick = {
+                            showContactDialog = true
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_report))
+                    }
+
+                    Button(
+                        onClick = { finishAffinity() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(stringResource(R.string.btn_exit))
                     }
                 }
-                .setNegativeButton(R.string.cancel, null)
-                .show()
-        }
 
-        findViewById<Button>(R.id.buttonExit).setOnClickListener {
-            finishAffinity()
-        }
+                if (showContactDialog) {
+                    AlertDialog(
+                        onDismissRequest = {
+                            showContactDialog = false
+                        },
+                        title = {
+                            Text(stringResource(R.string.choose_contact))
+                        },
+                        text = {
+                            Column {
 
-        findViewById<Button>(R.id.buttonUsers).setOnClickListener {
-            startActivity(Intent(this, UsersActivity::class.java))
-        }
+                                TextButton(
+                                    onClick = {
+                                        showContactDialog = false
 
+                                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                            data = Uri.parse(
+                                                "mailto:tak_nazivaemay_podderjka@gmail.com"
+                                            )
+                                        }
+
+                                        try {
+                                            startActivity(intent)
+                                        } catch (e: ActivityNotFoundException) {
+                                            Toast.makeText(
+                                                this@MenuActivity,
+                                                R.string.no_mail_app,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.contact_email))
+                                }
+
+                                TextButton(
+                                    onClick = {
+                                        showContactDialog = false
+
+                                        val intent = Intent(Intent.ACTION_DIAL).apply {
+                                            data = Uri.parse("tel:+71234567890")
+                                        }
+
+                                        try {
+                                            startActivity(intent)
+                                        } catch (e: ActivityNotFoundException) {
+                                            Toast.makeText(
+                                                this@MenuActivity,
+                                                R.string.no_phone_app,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    }
+                                ) {
+                                    Text(stringResource(R.string.contact_phone))
+                                }
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    showContactDialog = false
+                                }
+                            ) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 }

@@ -1,9 +1,20 @@
 package com.example.myapplication
 
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.ImageView
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class ProfileActivity : BaseActivity() {
 
@@ -27,26 +38,70 @@ class ProfileActivity : BaseActivity() {
         val birthDate = prefs.getString("birthDate", "") ?: ""
         val gender = prefs.getString("gender", "") ?: ""
 
-        findViewById<ImageView>(R.id.imageAvatar)
-            .setImageResource(avatars[avatarIndex])
+        setContent {
+            AppTheme(darkTheme = isDarkTheme) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background)
+                        .verticalScroll(rememberScrollState())
+                        .padding(25.dp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        14.dp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = stringResource(R.string.profile),
+                        fontSize = 30.sp,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
 
-        findViewById<TextView>(R.id.textName).text =
-            getString(R.string.profile_name, name)
+                    Image(
+                        painter = painterResource(
+                            id = avatars[avatarIndex]
+                        ),
+                        contentDescription = stringResource(R.string.avatar),
+                        modifier = Modifier.size(100.dp),
+                        contentScale = ContentScale.Crop
+                    )
 
-        findViewById<TextView>(R.id.textLogin).text =
-            getString(R.string.profile_login, login)
+                    Text(
+                        text = stringResource(R.string.profile_name, name),
+                        fontSize = 20.sp
+                    )
 
-        findViewById<TextView>(R.id.textEmail).text =
-            getString(R.string.profile_email, email)
+                    Text(
+                        text = stringResource(R.string.profile_login, login),
+                        fontSize = 20.sp
+                    )
 
-        findViewById<TextView>(R.id.textBirthDate).text =
-            getString(R.string.profile_birth_date, birthDate)
+                    Text(
+                        text = stringResource(R.string.profile_email, email),
+                        fontSize = 20.sp
+                    )
 
-        findViewById<TextView>(R.id.textGender).text =
-            getString(R.string.profile_gender, gender)
+                    Text(
+                        text = stringResource(R.string.profile_birth_date, birthDate),
+                        fontSize = 20.sp
+                    )
 
-        findViewById<Button>(R.id.buttonBack).setOnClickListener {
-            finish()
+                    Text(
+                        text = stringResource(R.string.profile_gender, gender),
+                        fontSize = 20.sp
+                    )
+
+                    Button(
+                        onClick = { finish() },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.btn_back)
+                        )
+                    }
+                }
+            }
         }
     }
 }
