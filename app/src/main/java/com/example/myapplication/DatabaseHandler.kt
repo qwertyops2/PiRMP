@@ -47,7 +47,7 @@ class DatabaseHandler(context: Context) :
     }
 
     // Регистрация пользователя
-    fun addUser(user: User): Boolean {
+    fun addUser(user: User): Long {
         val db = writableDatabase
 
         // Проверяем, есть ли уже пользователи
@@ -70,9 +70,7 @@ class DatabaseHandler(context: Context) :
         values.put(u.COLUMN_AVATAR_INDEX, user.avatarIndex)
         values.put(u.COLUMN_IS_ADMIN, if (firstUser) 1 else 0)
 
-        val result = db.insert(u.TABLE_NAME, null, values)
-
-        return result != -1L
+        return db.insert(u.TABLE_NAME, null, values)
     }
 
     // Получение всех зарегистрированных пользователей
