@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.sp
 
 class MenuActivity : BaseActivity() {
 
+    private val isAdmin = mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -67,15 +69,17 @@ class MenuActivity : BaseActivity() {
                         Text(stringResource(R.string.btn_profile))
                     }
 
-                    Button(
-                        onClick = {
-                            startActivity(
-                                Intent(this@MenuActivity, UsersActivity::class.java)
-                            )
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(stringResource(R.string.menu_users))
+                    if (isAdmin.value) {
+                        Button(
+                            onClick = {
+                                startActivity(
+                                    Intent(this@MenuActivity, UsersActivity::class.java)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(stringResource(R.string.btn_admin))
+                        }
                     }
 
                     Button(
@@ -177,5 +181,19 @@ class MenuActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val userId = getSharedPreferences("session", MODE_PRIVATE)
+            .getInt("userId", -1)
+
+        val database = DatabaseHandler(this)
+        val user = database.getUserById(userId)
+
+        isAdmin.value = user?.isAdmin == true
+
+        database.close()
     }
 }

@@ -51,4 +51,7 @@
     <string name="demo_user">Пользователь %1$d</string>
     <string name="menu_users">Пользователи</string>
 
+    <string name="registration_failed">Не удалось зарегистрироваться. Возможно, логин уже занят</string>
+    <string name="btn_admin">Администрирование</string>
+
 </resources>

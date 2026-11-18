@@ -78,17 +78,33 @@ class HelloActivity : BaseActivity() {
 
                     Button(
                         onClick = {
-                            val prefs = getSharedPreferences("user", MODE_PRIVATE)
-                            val savedLogin = prefs.getString("login", null)
-                            val savedPassword = prefs.getString("password", null)
 
-                            if (login.isNotEmpty() && password.isNotEmpty() &&
-                                login == savedLogin && password == savedPassword) {
+                            val database = DatabaseHandler(this@HelloActivity)
 
-                                val intent = Intent(this@HelloActivity, MenuActivity::class.java)
-                                startActivity(intent)
+                            val user = if (login.isNotEmpty() && password.isNotEmpty()) {
+                                database.getUserByCredentials(login, password)
+                            } else {
+                                null
                             }
-                            else {
+
+                            database.close()
+
+                            if (user != null) {
+
+                                getSharedPreferences("session", MODE_PRIVATE)
+                                    .edit()
+                                    .putInt("userId", user.id)
+                                    .apply()
+
+                                Log.i("HelloActivity", "Авторизован пользователь ID: ${user.id}")
+
+                                val intent = Intent(
+                                    this@HelloActivity,
+                                    MenuActivity::class.java
+                                )
+                                startActivity(intent)
+
+                            } else {
                                 Toast.makeText(
                                     this@HelloActivity,
                                     R.string.invalid_credentials,
