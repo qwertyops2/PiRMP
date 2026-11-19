@@ -54,4 +54,10 @@
     <string name="registration_failed">Не удалось зарегистрироваться. Возможно, логин уже занят</string>
     <string name="btn_admin">Администрирование</string>
 
+    <string name="make_admin">Сделать администратором</string>
+    <string name="admin_role">Администратор</string>
+    <string name="admin_assigned">Права администратора назначены</string>
+    <string name="admin_assign_error">Не удалось назначить администратора</string>
+    <string name="user_not_found">Пользователь не найден</string>
+
 </resources>
